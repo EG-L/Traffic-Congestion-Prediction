@@ -2,7 +2,9 @@
 
 교통 데이터와 기상 데이터를 융합하여 AI(LightGBM + LSTM)로 도로 혼잡도를 예측하고, 고속도로 CCTV 실시간 영상을 제공하는 웹 애플리케이션입니다.
 
-![대시보드](docs/screenshot.png)
+![대시보드](docs/screenshot_dashboard.png)
+
+![CCTV 모달](docs/screenshot_cctv.png)
 
 ---
 
