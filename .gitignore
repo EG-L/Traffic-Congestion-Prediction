@@ -1,0 +1,31 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# 환경변수 (절대 커밋 금지)
+.env
+*.env
+
+# 로그
+logs/
+*.log
+
+# 모델 가중치
+backend/app/models/weights/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+.claude/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
