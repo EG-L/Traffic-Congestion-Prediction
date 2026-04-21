@@ -37,6 +37,7 @@ class TrafficPredictor:
     def __init__(self):
         self.lgbm_model: Optional[object] = None
         self.lstm_model: Optional[object] = None
+        self.lstm_scalers: Optional[dict] = None
         self._load_models()
 
     def _load_models(self):
@@ -46,6 +47,12 @@ class TrafficPredictor:
         if LGBM_AVAILABLE and os.path.exists(lgbm_path):
             with open(lgbm_path, "rb") as f:
                 self.lgbm_model = pickle.load(f)
+
+        scaler_path = os.path.join(MODEL_DIR, "lstm_scaler.pkl")
+        self.lstm_scalers: Optional[dict] = None
+        if os.path.exists(scaler_path):
+            with open(scaler_path, "rb") as f:
+                self.lstm_scalers = pickle.load(f)
 
         lstm_path = os.path.join(MODEL_DIR, "lstm_model.pth")
         if TORCH_AVAILABLE and os.path.exists(lstm_path):
@@ -90,10 +97,19 @@ class TrafficPredictor:
                 weather_data.get("precipitation", 0),
                 weather_data.get("temperature", 20),
                 weather_data.get("wind_speed", 2),
-            ] for h in history[-12:]])
+            ] for h in history[-12:]], dtype=np.float32)
+
+            if self.lstm_scalers:
+                seq = self.lstm_scalers["feature"].transform(seq)
+
             tensor = torch.FloatTensor(seq).unsqueeze(0)
             with torch.no_grad():
-                speed_pred = float(self.lstm_model(tensor).item())
+                raw = float(self.lstm_model(tensor).item())
+
+            if self.lstm_scalers:
+                speed_pred = float(self.lstm_scalers["target"].inverse_transform([[raw]])[0][0])
+            else:
+                speed_pred = raw
         else:
             speed_pred = self._rule_based_predict(history[-1] if history else {}, weather_data)
 
