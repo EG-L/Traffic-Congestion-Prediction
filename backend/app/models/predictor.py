@@ -58,6 +58,8 @@ class TrafficPredictor:
         return np.array([[
             now.hour,
             now.weekday(),
+            int(now.weekday() >= 5),
+            now.month,
             traffic_data.get("speed", 50),
             weather_data.get("precipitation", 0),
             weather_data.get("temperature", 20),
