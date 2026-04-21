@@ -6,7 +6,7 @@ from config import prop
 async def fetch_cctv_nearby(lat: float, lng: float, radius: float = 0.15) -> list:
     url = os.environ.get(prop['cctv']['base_url'])
     params = {
-        "key": os.environ.get(prop['cctv']['api_key']),
+        "apiKey": os.environ.get(prop['cctv']['api_key']),
         "type": "ex",        # 고속도로
         "cctvType": "1",     # 실시간 스트리밍(HLS)
         "minX": lng - radius,
@@ -20,7 +20,12 @@ async def fetch_cctv_nearby(lat: float, lng: float, radius: float = 0.15) -> lis
         try:
             response = await client.get(url, params=params)
             response.raise_for_status()
-            return _parse_cctv(response.json())
+            import json
+            try:
+                data = response.content.decode("utf-8")
+            except UnicodeDecodeError:
+                data = response.content.decode("euc-kr")
+            return _parse_cctv(json.loads(data))
         except Exception:
             return _get_mock_cctv(lat, lng)
 
