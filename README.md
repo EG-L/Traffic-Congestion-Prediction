@@ -4,7 +4,7 @@
 
 ![대시보드](docs/screenshot_dashboard.png)
 
-![CCTV 모달](docs/screenshot_cctv.png)
+![CCTV 모달](docs/screenshot_cctv2.png)
 
 ---
 
