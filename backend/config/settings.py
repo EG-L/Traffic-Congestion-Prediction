@@ -1,7 +1,3 @@
-from dotenv import load_dotenv
-
-load_dotenv()
-
 prop = {
     'traffic': {
         "api_key": 'TRAFFIC_API_KEY',
